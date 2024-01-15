@@ -35,7 +35,7 @@ train, test = grievance_dataset.split_frame(ratios = [0.9], seed = 1234)
 
 # set GLM modeling parameters
 # and initialize model training
-glm_model = H2OGeneralizedLinearEstimator(family= "auto"
+glm_model = H2OGeneralizedLinearEstimator(family= "multinomial"
                                           #lambda_ = 0,
                                           #compute_p_values = True
                                           )
@@ -49,6 +49,9 @@ print(predict)
 
 # View a summary of the prediction
 predict.head()
+
+modelfile = glm_model.download_mojo(path="../build/", get_genmodel_jar=True)
+print("Model saved to " + modelfile)
 
 
 
