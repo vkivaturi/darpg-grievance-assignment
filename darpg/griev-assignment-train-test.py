@@ -20,22 +20,25 @@ print(grievance_dataset.nrows)
 print('## grievance_dataset frame is created')
 
 # convert columns to factors
-grievance_dataset['sex'] = grievance_dataset['sex'].asfactor()
+grievance_dataset['SEX'] = grievance_dataset['SEX'].asfactor()
+#grievance_dataset['ORG_CODE'] = grievance_dataset['ORG_CODE'].asfactor()
+#grievance_dataset['PINCODE'] = grievance_dataset['PINCODE'].asfactor()
 
 # set the predictor and response columns
-predictors = ["org_code", "pincode"]
-response_col = "sex"
+predictors = ["ORG_CODE", "PINCODE"]
+response_col = "SEX"
 
 print('## predictors and responses are set')
 
 # split into train and testing sets
-train, test = grievance_dataset.split_frame(ratios = [0.8], seed = 1234)
+train, test = grievance_dataset.split_frame(ratios = [0.9], seed = 1234)
 
 # set GLM modeling parameters
 # and initialize model training
-glm_model = H2OGeneralizedLinearEstimator(family= "auto",
-                                          lambda_ = 0,
-                                          compute_p_values = True)
+glm_model = H2OGeneralizedLinearEstimator(family= "auto"
+                                          #lambda_ = 0,
+                                          #compute_p_values = True
+                                          )
 
 glm_model.train(predictors, response_col, training_frame= grievance_dataset)
 
