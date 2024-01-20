@@ -1,5 +1,6 @@
 import sys
-
+#Copy specific number of rows from one CSV to another
+#Perform data cleaning and other transfrmation rules
 input_filename_csv = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\no_pii_grievance.csv'
 output_filename_csv = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\no_pii_grievance_truncated.csv'
 
