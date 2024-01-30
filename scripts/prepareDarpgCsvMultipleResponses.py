@@ -3,8 +3,8 @@ import json
 import csv
 
 # Initialise file names used in this script
-report_json_file_name = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\no_pii_grievance.json'
-history_json_file_name = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\no_pii_action_history.json'
+report_json_file_name = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\no_pii_grievance_small.json'
+history_json_file_name = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\no_pii_action_history_small.json'
 history_json_file_temp_name = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\no_pii_action_history_temp.json'
 gievance_merged_csv_file_name = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\grievance_merged_history_full.csv'
 
@@ -33,6 +33,14 @@ def writeFinalCsv(report_data, history_dict, output_csv_file):
 	fieldnames = ['registration_no', 'org_code', 'dist_name', 'pincode', 'state', 'sex', 'history_id', 'history_officer_detail', 'history_org_code']
 	csv_writer = csv.DictWriter(output_csv_file, fieldnames=fieldnames)
 
+# Create dynamic dict with column headers
+	dynamic_headers = {}
+	for record in report_data:
+		dynamic_headers[history_dict.get(record['registration_no'])['OfficerDetail']] = True
+
+	for key in dynamic_headers:
+		fieldnames.append(key)
+
 	print('## Grievance report file is loaded')
 	print("## Records in grievance file : ", len(report_data))
 
@@ -44,14 +52,15 @@ def writeFinalCsv(report_data, history_dict, output_csv_file):
 			csv_writer.writeheader()
 
 		format_fields(record, fieldnames)
-
+		officer_name = history_dict.get(record['registration_no'])['OfficerDetail']
     	#TODO - Below hard coding of field names can be optimized further
 		csv_writer.writerow({'registration_no': record['registration_no'], 
 					   'org_code': record['org_code'], 'dist_name': record['dist_name'], 
 					  'pincode': record['pincode'], 'state': record['state'], 'sex': record['sex'], 
 					  'history_id': history_dict.get(record['registration_no'])['_id'],
-					  'history_officer_detail': history_dict.get(record['registration_no'])['OfficerDetail'],
-					  'history_org_code': history_dict.get(record['registration_no'])['org_code']
+					  'history_officer_detail': officer_name,
+					  'history_org_code': history_dict.get(record['registration_no'])['org_code'],
+					  officer_name : True
 					  })
 
 def main():
@@ -59,14 +68,16 @@ def main():
 
 	#Remove invalid json elements from history file
 	remove_invalid_json_fields_from_history(history_json_file_name, history_json_file_temp_name)
+	print('## Grievance hisory file is cleaned')
 
 	with open(history_json_file_temp_name, encoding='utf8') as history_json_file:
 		history_data = json.load(history_json_file)
+	print('## Grievance hisory file is loaded')
 
 	with open(report_json_file_name, encoding='utf8') as report_json_file:
 		report_data = json.load(report_json_file)
 
-	print('## Grievance hisory file is loaded')
+	print('## Grievance report file is loaded')
 	print('## Records in history_data : ', len(history_data))
 
 	#Create a dictionary of history records. We are interested in the latest update of each grievance.
@@ -81,7 +92,7 @@ def main():
 	output_csv_file = open(gievance_merged_csv_file_name, 'w', encoding='utf8', newline='')
 	
 	writeFinalCsv(report_data, history_dict, output_csv_file)
-	
+
 	#Cleanup of open file handlers
 	report_json_file.close()
 	history_json_file.close()

@@ -11,3 +11,6 @@ pip3 install setuptools
 ```shell
 javac -cp ../build/h2o-genmodel.jar PredictGender.java && java -cp .;../build/h2o-genmodel.jar PredictGender
 ```
+```shell
+java -Xmx3g -jar h2o.jar
+```

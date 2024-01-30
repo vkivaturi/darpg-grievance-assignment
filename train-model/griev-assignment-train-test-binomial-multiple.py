@@ -2,7 +2,7 @@ import h2o
 from h2o.estimators.glm import H2OGeneralizedLinearEstimator
 import logging
 
-filename_csv = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\no_pii_grievance_truncated.csv'
+filename_csv = 'C:\\Users\\vijay\\Downloads\\problem_statement_1_and_2\\grievance_merged_history_full_truncated.csv'
 
 print('## Model training and testing script has started')
 
@@ -20,18 +20,18 @@ print(grievance_dataset.nrows)
 print('## grievance_dataset frame is created')
 
 # convert columns to factors
-grievance_dataset['SEX'] = grievance_dataset['SEX'].asfactor()
-#grievance_dataset['ORG_CODE'] = grievance_dataset['ORG_CODE'].asfactor()
-#grievance_dataset['PINCODE'] = grievance_dataset['PINCODE'].asfactor()
+grievance_dataset['history_officer_detail'] = grievance_dataset['history_officer_detail'].asfactor()
+grievance_dataset['org_code'] = grievance_dataset['org_code'].asfactor()
+grievance_dataset['pincode'] = grievance_dataset['pincode'].asfactor()
 
 # set the predictor and response columns
-predictors = ["ORG_CODE", "PINCODE"]
-response_col = "SEX"
+predictors = ["org_code", "pincode"]
+response_col = "history_officer_detail"
 
 print('## predictors and responses are set')
 
 # split into train and testing sets
-train, test = grievance_dataset.split_frame(ratios = [0.9], seed = 1234)
+train, test = grievance_dataset.split_frame(ratios = [0.7], seed = 1234)
 
 # set GLM modeling parameters
 # and initialize model training
